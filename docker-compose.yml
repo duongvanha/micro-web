@@ -1,6 +1,12 @@
 version: '3'
 services:
 
+  nginx:
+    restart: always
+    build: nginx
+    ports:
+      - 4200:80
+
   postgres:
     env_file:
       - server/.env
@@ -17,8 +23,6 @@ services:
       dockerfile: Dockerfile.${NODE_ENV}
     volumes:
       - ./client:/app
-    ports:
-      - 8080:8080
 
   server:
     env_file:
