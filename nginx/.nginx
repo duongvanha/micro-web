@@ -10,6 +10,10 @@ upstream server {
 server {
     listen       80;
 
+    location / {
+        proxy_pass http://client;
+    }
+
 
     location /api {
         rewrite /api(.*) /$1 break;
