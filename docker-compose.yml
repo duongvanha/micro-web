@@ -1,0 +1,39 @@
+version: '3'
+services:
+
+  postgres:
+    env_file:
+      - server/.env
+    image: postgres:alpine
+
+  redis:
+    env_file:
+      - server/.env
+    image: redis:alpine
+
+  client:
+    build:
+      context: client
+      dockerfile: Dockerfile.${NODE_ENV}
+    volumes:
+      - ./client:/app
+    ports:
+      - 8080:8080
+
+  server:
+    env_file:
+      - server/.env
+    build:
+      context: server
+      dockerfile: Dockerfile.${NODE_ENV}
+    volumes:
+      - ./server:/app
+    links:
+      - postgres
+      - redis
+
+  worker:
+    build: worker
+    links:
+      - postgres
+      - redis
