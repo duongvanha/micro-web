@@ -1,0 +1,10 @@
+FROM node:carbon-alpine as builder
+
+WORKDIR /app
+
+COPY . .
+RUN rm -f /app/node_modules
+
+RUN npm i
+
+CMD ["npm","run","build"]
