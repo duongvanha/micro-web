@@ -37,6 +37,10 @@ services:
       - redis
 
   worker:
-    build: worker
+    env_file:
+      - server/.env
+    build:
+      context: worker
+      dockerfile: Dockerfile.${NODE_ENV}
     links:
       - redis
