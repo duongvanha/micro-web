@@ -9,12 +9,12 @@ services:
 
   postgres:
     env_file:
-      - server/.env
+      - ./.env
     image: postgres:alpine
 
   redis:
     env_file:
-      - server/.env
+      - ./.env
     image: redis:alpine
 
   client:
@@ -26,7 +26,7 @@ services:
 
   server:
     env_file:
-      - server/.env
+      - ./.env
     build:
       context: server
       dockerfile: Dockerfile.${NODE_ENV}
@@ -38,7 +38,7 @@ services:
 
   worker:
     env_file:
-      - server/.env
+      - ./.env
     build:
       context: worker
       dockerfile: Dockerfile.${NODE_ENV}
