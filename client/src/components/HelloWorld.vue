@@ -3,7 +3,7 @@
         <h1>{{ msg }}</h1>
         <input v-model="index"/>
         <button v-on:click="send()">send</button>
-        <textarea>{{ listPi|json }}</textarea>
+        <div>{{ listPi|json }}</div>
     </div>
 </template>
 
