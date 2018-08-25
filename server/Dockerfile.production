@@ -2,11 +2,10 @@ FROM node:carbon-alpine
 
 WORKDIR /app
 
-COPY ./package.json /
-COPY ./package-lock.json /
+COPY . .
+RUN rm -f /app/node_modules
 
 RUN npm i
 
-COPY . .
 
 CMD ["npm","run","start"]
