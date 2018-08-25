@@ -25,9 +25,7 @@
             },
         },
         beforeCreate: function () {
-            setInterval(() => {
-                axiosProvider.request.get('/api/values/current').then(response => this.listPi = response.data)
-            }, 500)
+            axiosProvider.request.get('/api/values/current').then(response => this.listPi = response.data)
         },
         methods     : {
             send: function () {

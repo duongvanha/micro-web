@@ -2,8 +2,11 @@
 
 ## set env
 ```
- export NODE_ENV=development
+ copy file .env.example -> .env
+ export NODE_ENV=development (production)
+ 
  docker-compose up -d
+ 
 ```
 
 
