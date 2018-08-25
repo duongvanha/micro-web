@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+
+before_install:
+  - docker build -t test -f ./client/Dockerfile.development ./client
+
+script:
+  - docker run test npm run lint
+
+after_success:
+  - docker build -t blademaster996/micro-web/client -f ./client/Dockerfile.production ./client
+  - docker build -t blademaster996/micro-web/server -f ./client/Dockerfile.production ./server
+  - docker build -t blademaster996/micro-web/nginx  -f ./client/Dockerfile.production ./nginx
+  - docker build -t blademaster996/micro-web/worker -f ./client/Dockerfile.production ./worker
+
+  - docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD"
+
+  - docker push blademaster996/micro-web/client
+  - docker push blademaster996/micro-web/server
+  - docker push blademaster996/micro-web/nginx
+  - docker push blademaster996/micro-web/worker
