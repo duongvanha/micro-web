@@ -44,3 +44,5 @@ services:
       dockerfile: Dockerfile.${NODE_ENV}
     links:
       - redis
+    volumes:
+      - ./worker:/app
