@@ -3,7 +3,7 @@ FROM node:carbon-alpine
 WORKDIR /app
 
 COPY . .
-RUN rm -f /app/node_modules
+RUN rm -rf /app/node_modules
 
 RUN npm i
 

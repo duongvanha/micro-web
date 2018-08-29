@@ -21,11 +21,10 @@ services:
     build:
       context: client
       dockerfile: docker/Dockerfile.${NODE_ENV}
-    command: /command.${NODE_ENV}.sh
     volumes:
       - ./client:/usr/src/app
       - ./client/node_modules:/usr/src/app/node_modules
-      - ./client/docker/command.sh:/command.sh
+      - ./client/docker/command.${NODE_ENV}.sh:/command.sh
 
   server:
     env_file:
