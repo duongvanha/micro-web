@@ -20,9 +20,12 @@ services:
   client:
     build:
       context: client
-      dockerfile: Dockerfile.${NODE_ENV}
+      dockerfile: docker/Dockerfile.${NODE_ENV}
+    command: /command.${NODE_ENV}.sh
     volumes:
-      - ./client:/app
+      - ./client:/usr/src/app
+      - ./client/node_modules:/usr/src/app/node_modules
+      - ./client/docker/command.sh:/command.sh
 
   server:
     env_file:
@@ -32,6 +35,7 @@ services:
       dockerfile: Dockerfile.${NODE_ENV}
     volumes:
       - ./server:/app
+      - /app/node_modules
     links:
       - postgres
       - redis
@@ -46,3 +50,4 @@ services:
       - redis
     volumes:
       - ./worker:/app
+      - /app/node_modules

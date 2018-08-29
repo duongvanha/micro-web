@@ -1,0 +1,17 @@
+FROM node:carbon-alpine
+
+# Install app dependencies
+RUN mkdir /build-dir
+WORKDIR /build-dir
+COPY package.json /build-dir
+RUN npm install
+
+# Create app directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+RUN ln -s /build-dir/node_modules node_modules
+
+# Bundle app source
+COPY . /usr/src/app
+
+CMD ["npm","run","serve"]
