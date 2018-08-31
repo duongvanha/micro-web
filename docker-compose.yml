@@ -7,16 +7,6 @@ services:
     ports:
       - 4200:80
 
-  postgres:
-    env_file:
-      - ./.env
-    image: postgres:alpine
-
-  redis:
-    env_file:
-      - ./.env
-    image: redis:alpine
-
   client:
     build:
       context: client
@@ -38,15 +28,3 @@ services:
     links:
       - postgres
       - redis
-
-  worker:
-    env_file:
-      - ./.env
-    build:
-      context: worker
-      dockerfile: Dockerfile.${NODE_ENV}
-    links:
-      - redis
-    volumes:
-      - ./worker:/app
-      - /app/node_modules
