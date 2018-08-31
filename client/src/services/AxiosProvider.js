@@ -4,13 +4,11 @@ const a = Symbol();
 
 export default class AxiosProvider {
 
-    constructor() {
-        this[a] = Axios.create({
-            headers: {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'},
-        });
+    constructor(config) {
+        this[a] = Axios.create(config);
     }
 
     get request() {
-        return this[a]
+        return this[a];
     }
 }

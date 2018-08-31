@@ -1,23 +1,31 @@
+const rp = require('request-promise');
+
 const decodeUrlInfoMovie = Symbol();
 const encodeStep1        = Symbol();
 const encodeStep2        = Symbol();
 const encodeStep3        = Symbol();
+
+function requestWithHeader(uri) {
+    return rp({
+        uri,
+        headers: {
+            'Accept'    : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'User-Agent': 'Chrome/68.0.3440.106',
+        },
+    });
+}
 
 /**
  *
  * @class
  * @implements {MovieProvider}
  */
-export default class PhimMoiProvider {
-
-    constructor(httpService) {
-        this.httpService = httpService;
-    }
+class PhimMoiProvider {
 
     getMovieByUrl(url) {
         return this[encodeStep1](url)
-            // .then(response => this[encodeStep2](response))
-            // .then(response => this[decodeUrlInfoMovie](response))
+            .then(response => this[encodeStep2](response))
+            .then(response => this[decodeUrlInfoMovie](response));
     }
 
     /**
@@ -26,7 +34,7 @@ export default class PhimMoiProvider {
      * @returns {{}} movie
      */
     [decodeUrlInfoMovie](stringEncode) {
-        return JSON.parse(stringEncode.match(/_responseJson='(.*)'/)[1])
+        return JSON.parse(stringEncode.match(/_responseJson='(.*)'/)[1]);
     }
 
     /**
@@ -35,9 +43,7 @@ export default class PhimMoiProvider {
      * @returns {Promise<string>}
      */
     async [encodeStep1](url) {
-        this.httpService.request.get(url).then(console.log).catch(console.log)
-        // return requestWithHeader(url)
-        //     .then(response => response.match(/(;eval.*'\)\);)/)[1])
+        return requestWithHeader(url).then(response => response.match(/(;eval.*'\)\);)/)[1]);
     }
 
     [encodeStep3](w, i, s, e) {
@@ -77,10 +83,12 @@ export default class PhimMoiProvider {
     [encodeStep2](response) {
         try {
             const [, p1, p2, p3, p4] = response.match(/\('(\w+)','(\w+)','(\w+)','(\w+)'\)/);
-            return this[encodeStep2](this[encodeStep3](p1, p2, p3, p4))
+            return this[encodeStep2](this[encodeStep3](p1, p2, p3, p4));
         } catch (e) {
-            // return requestWithHeader(response.match(/"(http:.*)" /)[1]);
+            return requestWithHeader(response.match(/"(http:.*)" /)[1]);
         }
     }
 
 };
+
+module.exports = PhimMoiProvider;

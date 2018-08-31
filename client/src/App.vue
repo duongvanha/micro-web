@@ -1,30 +1,29 @@
 <template>
     <div id="app">
-        <ListMovie/>
-        <MovieDetail/>
+        <ListMovie v-on:clickMovie="selectMovie"/>
+        <MovieDetail v-bind:movie="movie"/>
     </div>
 </template>
 
 <script>
-    import HelloWorld        from './components/HelloWorld.vue';
-    import { axiosProvider } from './services';
-    import ListMovie         from './components/ListMovie';
-    import MovieDetail       from './components/MovieDetail';
+    import ListMovie   from './components/ListMovie';
+    import MovieDetail from './components/MovieDetail';
 
     export default {
-        name        : 'app',
-        components  : {
+        name      : 'app',
+        components: {
             MovieDetail,
             ListMovie,
-            HelloWorld,
         },
         data() {
-            return {helloText: ''}
+            return { movie: null };
         },
-        beforeCreate: function () {
-            axiosProvider.request.get('/api').then(response => this.helloText = response.data)
+        methods   : {
+            selectMovie(movie) {
+                this.movie = movie;
+            },
         },
-    }
+    };
 </script>
 
 <style>

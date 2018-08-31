@@ -1,31 +1,24 @@
 <template>
     <ul>
-        <li>
-            <a>phim 1</a>
-        </li>
-        <li>
-            <a>phim 1</a>
-        </li>
-        <li>
-            <a>phim 1</a>
-        </li>
-        <li>
-            <a>phim 1</a>
-        </li>
-        <li>
-            <a>phim 1</a>
-        </li>
-        <li>
-            <a>phim 1</a>
+        <li v-for="(item) in movies" v-on:click="$emit('clickMovie',item)">
+            {{item.namevi}}
         </li>
     </ul>
 </template>
 
 <script>
 
+    import { axiosProvider } from '../services';
+
     export default {
-        name: 'ListMovie',
-    }
+        name        : 'ListMovie',
+        data() {
+            return { movies: [] };
+        },
+        beforeCreate: function() {
+            axiosProvider.request.get('/api/movies').then(response => this.movies = response.data);
+        },
+    };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
