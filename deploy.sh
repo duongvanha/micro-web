@@ -13,7 +13,7 @@ docker push blademaster996/micro-web-client:$SHA
 docker push blademaster996/micro-web-server:$SHA
 docker push blademaster996/micro-web-worker:$SHA
 
-kubectl apply -f k8s
+kubectl apply -f kubernetes
 
 kubectl set image blademaster996/micro-web-client blademaster996/micro-web-client:$SHA
 kubectl set image blademaster996/micro-web-server blademaster996/micro-web-server:$SHA
