@@ -2,22 +2,29 @@ sudo: required
 services:
   - docker
 
+env:
+  global:
+  - SHA=$(git rev-parse HEAD)
+  - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 
 before_install:
+  - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in service-account.json.enc -out service-account.json -d
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file service-account.json
+  - gcloud config set project test-docker-214117
+  - gcloud config set compute/zone southamerica-east1-a
+  - gcloud container clusters get-credentials microweb
+
+  - docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD"
   - docker build -t test -f ./client/Dockerfile.test ./client
 
 script:
   - docker run test npm run lint
 
-after_success:
-  - docker build -t blademaster996/micro-web-client -f ./client/Dockerfile.production ./client
-  - docker build -t blademaster996/micro-web-server -f ./server/Dockerfile.production ./server
-  - docker build -t blademaster996/micro-web-worker -f ./worker/Dockerfile.production ./worker
-  - docker build -t blademaster996/micro-web-nginx                                    ./nginx
-
-  - docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD"
-
-  - docker push blademaster996/micro-web-client
-  - docker push blademaster996/micro-web-server
-  - docker push blademaster996/micro-web-nginx
-  - docker push blademaster996/micro-web-worker
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master
