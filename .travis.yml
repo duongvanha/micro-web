@@ -20,7 +20,7 @@ before_install:
   - gcloud container clusters get-credentials microweb
 
   - docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD"
-  - docker build -t test -f ./client/Dockerfile.test ./client
+  - docker build -t test -f ./client/docker/Dockerfile.test ./client
 
 script:
   - docker run test npm run lint

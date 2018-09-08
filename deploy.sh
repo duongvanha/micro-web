@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # $SHA is string unique to force restart 'kubectl deployment'
-docker build -t blademaster996/micro-web-client:latest -t blademaster996/micro-web-client:$SHA -f ./client/Dockerfile.production ./client
+docker build -t blademaster996/micro-web-client:latest -t blademaster996/micro-web-client:$SHA -f ./client/docker/Dockerfile.production ./client
 docker build -t blademaster996/micro-web-server:latest -t blademaster996/micro-web-server:$SHA -f ./server/Dockerfile.production ./server
 docker build -t blademaster996/micro-web-worker:latest -t blademaster996/micro-web-worker:$SHA -f ./worker/Dockerfile.production ./worker
 
