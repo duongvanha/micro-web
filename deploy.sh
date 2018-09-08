@@ -15,6 +15,6 @@ docker push blademaster996/micro-web-worker:$SHA
 
 kubectl apply -f kubernetes
 
-kubectl set image blademaster996/micro-web-client blademaster996/micro-web-client:$SHA
-kubectl set image blademaster996/micro-web-server blademaster996/micro-web-server:$SHA
-kubectl set image blademaster996/micro-web-worker blademaster996/micro-web-worker:$SHA
+kubectl set image deployments/client-deployment blademaster996/micro-web-client:$SHA
+kubectl set image deployments/server-deployment blademaster996/micro-web-server:$SHA
+kubectl set image deployments/worker-deployment blademaster996/micro-web-worker:$SHA
