@@ -10,6 +10,7 @@
   "author": "dvha <friendd1996@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "grpc": "^1.15.1",
     "redis": "^2.8.0"
   },
   "devDependencies": {

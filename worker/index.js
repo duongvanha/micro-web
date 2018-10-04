@@ -1,19 +1,20 @@
-const redis = require('redis');
+const grpc  = require('grpc');
+const proto = grpc.load('../proto/transfers.proto');
 
-const redisClient = redis.createClient({
-    host          : process.env.REDIS_HOST,
-    retry_strategy: () => 1000,
-});
-const sub         = redisClient.duplicate();
+const server = new grpc.Server();
 
-function fib(index) {
-    if (index < 2) return 1;
-    return fib(index - 1) + fib(index - 2);
-}
+server.addService(proto.context.TransferService.service, {
 
-sub.on('message', (channel, message) => {
-    console.log('go mesage', message);
-    redisClient.hset('values', message, fib(parseInt(message)));
+    send(call, callback) {
+        console.log(call.request);
+        callback(null, { id: 1, text: 'demo' });
+    },
+
+
 });
 
-sub.subscribe('insert');
+server.bind('0.0.0.0:50050', grpc.ServerCredentials.createInsecure());
+
+//Start the server
+server.start();
+console.log('grpc server running on port:', '0.0.0.0:50050');

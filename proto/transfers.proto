@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package context;
+
+service TransferService {
+    rpc send (data) returns (data);
+}
+
+message data {
+    int32 id = 1;
+    string text = 2;
+}
