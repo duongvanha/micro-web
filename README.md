@@ -8,6 +8,10 @@
  docker-compose up -d
  
 ```
+## build proto
+```bash
+    protoc proto/*.proto --go_out=.
+```
 # run kubernetes
 
 ```bash
