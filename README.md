@@ -10,7 +10,7 @@
 ```
 ## build proto
 ```bash
-    protoc proto/*.proto --go_out=.
+    protoc -I proto/ proto/*.proto --go_out=plugins=grpc:proto
 ```
 # run kubernetes
 
