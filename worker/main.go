@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./movie"
 	"encoding/json"
+	"github.com/duongvanha/micro-web/worker/movie"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"

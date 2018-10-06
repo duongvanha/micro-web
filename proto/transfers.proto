@@ -29,11 +29,11 @@ message Movie {
     string Cam = 11;
     string Quality = 12;
     string Sub = 13;
-    string Categories = 14;
+    string Type = 14;
     string Manufacturer = 15;
     string View = 16;
     string Url = 17;
-    repeated Chap Movies = 18;
+    string Movies = 18;
 }
 
 message ListMovie {

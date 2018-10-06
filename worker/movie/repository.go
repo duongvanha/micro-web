@@ -1,8 +1,8 @@
 package movie
 
 import (
-	model "../../proto"
 	"database/sql"
+	model "github.com/duongvanha/micro-web/proto"
 	_ "github.com/lib/pq"
 	"github.com/russross/meddler"
 	"os"
@@ -10,6 +10,7 @@ import (
 
 func init() {
 	meddler.Default = meddler.PostgreSQL
+	meddler.Mapper = meddler.LowerCase
 }
 
 type Repository struct {
@@ -22,7 +23,7 @@ func (r *Repository) GetByPage(page int) (movies []*model.Movie, err error) {
 		return
 	}
 
-	err = meddler.QueryAll(db, &model.Movie{}, "SELECT * FROM movies LIMIT 5")
+	err = meddler.QueryAll(db, &movies, "SELECT * FROM movies LIMIT 5")
 
 	return
 }
