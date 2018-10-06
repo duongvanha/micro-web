@@ -1,12 +1,41 @@
 syntax = "proto3";
 
-package context;
+package movie;
 
-service TransferService {
-    rpc send (data) returns (data);
+service MovieRepository {
+    rpc GetByPage (page) returns (ListMovie);
 }
 
-message data {
-    int32 id = 1;
-    string text = 2;
+message page {
+    string page = 1;
+}
+
+message Chap {
+    string SeverName = 1;
+    repeated string Urls = 2;
+}
+
+message Movie {
+    string NameVi = 1;
+    string NameEn = 2;
+    string Image = 3;
+    string Status = 4;
+    string IMDb = 5;
+    string Director = 6;
+    string Country = 7;
+    string Year = 8;
+    string Date = 9;
+    string Time = 10;
+    string Cam = 11;
+    string Quality = 12;
+    string Sub = 13;
+    string Categories = 14;
+    string Manufacturer = 15;
+    string View = 16;
+    string Url = 17;
+    repeated Chap Movies = 18;
+}
+
+message ListMovie {
+    repeated Movie movies = 1;
 }
