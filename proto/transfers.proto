@@ -7,7 +7,7 @@ service MovieRepository {
 }
 
 message page {
-    string page = 1;
+    int32 page = 1;
 }
 
 message Chap {

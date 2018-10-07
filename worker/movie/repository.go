@@ -16,7 +16,7 @@ func init() {
 type Repository struct {
 }
 
-func (r *Repository) GetByPage(page int) (movies []*model.Movie, err error) {
+func (r *Repository) GetByPage(page int32) (movies []*model.Movie, err error) {
 
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {

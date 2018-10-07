@@ -68,9 +68,9 @@ const protoPath = path.join(__dirname, '..', 'proto');
 
 const proto = grpc.load({ root: protoPath, file: 'transfers.proto' });
 
-const client = new proto.context.TransferService('localhost:50050', grpc.credentials.createInsecure());
+const client = new proto.movie.MovieRepository('localhost:50050', grpc.credentials.createInsecure());
 
-client.send({ id: 2, text: 'test2' }, (error, response) => {
+client.GetByPage(4, (error, response) => {
     if (!error) {
         console.log('Response : ', response);
     }
