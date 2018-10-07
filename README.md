@@ -4,6 +4,7 @@
 ```bash
  copy file .env.example -> .env
  export NODE_ENV=development
+ ./install.sh
  
  docker-compose up -d
  

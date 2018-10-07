@@ -45,8 +45,6 @@ services:
     build:
       context: worker
       dockerfile: Dockerfile.${NODE_ENV}
-    links:
-      - redis
     volumes:
-      - ./worker:/app
-      - /app/node_modules
+      - ./:/go/src/github.com/duongvanha/micro-web
+      - /go/src/github.com/duongvanha/worker/vendor
