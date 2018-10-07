@@ -7,7 +7,6 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
-	"os"
 )
 
 var movieRepository = movie.Repository{}
@@ -27,7 +26,8 @@ func (t *MovieRepositoryServer) GetByPage(ctx context.Context, page *model.Page)
 
 func main() {
 
-	port := os.Getenv("PORT")
+	//port := os.Getenv("PORT")
+	port := "50050"
 
 	listen, err := net.Listen("tcp", ":"+port)
 	if err != nil {
