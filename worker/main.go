@@ -11,9 +11,9 @@ import (
 
 var movieRepository = movie.Repository{}
 
-type MovieRepositoryServer struct{}
+type MovieController struct{}
 
-func (t *MovieRepositoryServer) GetByPage(ctx context.Context, page *model.Page) (listMovies *model.ListMovie, err error) {
+func (t *MovieController) GetByPage(ctx context.Context, page *model.Page) (listMovies *model.ListMovie, err error) {
 
 	movies, err := movieRepository.GetByPage(page.Page)
 	if err != nil {
@@ -38,7 +38,7 @@ func main() {
 	log.Println("Starting HTTP service at " + port)
 
 	server := grpc.NewServer()
-	model.RegisterMovieRepositoryServer(server, new(MovieRepositoryServer))
+	model.RegisterMovieRepositoryServer(server, new(MovieController))
 	server.Serve(listen)
 
 }
