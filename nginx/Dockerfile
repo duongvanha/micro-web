@@ -1,3 +1,7 @@
 FROM nginx:alpine
 
-#COPY ./.nginx /etc/nginx/conf.d/default.conf
+WORKDIR /nginx
+
+COPY ./.nginx /nginx/conf/.nginx
+
+CMD ["nginx", "-c", "/nginx/conf/.nginx"]
