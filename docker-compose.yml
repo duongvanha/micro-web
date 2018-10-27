@@ -43,15 +43,15 @@ services:
     - postgres
     - redis
 
-  worker:
-    env_file:
-    - ./.env
-    build:
-      context: worker
-      dockerfile: Dockerfile.${NODE_ENV}
-    volumes:
-    - ./:/go/src/github.com/duongvanha/micro-web
-    - /go/src/github.com/duongvanha/worker/vendor
+#  worker:
+#    env_file:
+#    - ./.env
+#    build:
+#      context: worker
+#      dockerfile: Dockerfile.${NODE_ENV}
+#    volumes:
+#    - ./:/go/src/github.com/duongvanha/micro-web
+#    - /go/src/github.com/duongvanha/worker/vendor
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
