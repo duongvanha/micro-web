@@ -1,0 +1,61 @@
+type Query {
+    categories  (query: String)      :[Category]
+    users       (query: String)      :[User]
+    countries   (query: String)      :[Country]
+    movies      (query: String)      :[Movie]
+}
+
+type Category {
+    href    :String
+    name    :String
+}
+
+type User {
+    name    :String
+    image   :String
+    href    :String
+}
+
+
+type Country {
+    code    :String
+    href    :String
+    name    :String
+}
+
+type Chap {
+    IdMovie :String
+    Url     :String
+}
+
+type Keyword {
+    Text    : String
+}
+
+
+type Movie {
+    name_vi             :String
+    name_en             :String
+    duration            :String
+    quantity            :String
+    resolution          :String
+    language            :String
+    production_company  :String
+    content             :String
+    trailer             :String
+    poster              :String
+    status              :String
+    year                :Int
+    view                :Int
+    im_db               :Float
+    aw                  :Float
+    directors           :[User]
+    actors              :[User]
+    error               :String
+    url                 :String
+#    keywords            :[Keyword]
+#    Chaps               :[Chap]
+    categories          :[Category]
+    countries           :[Country]
+    release_date        :String
+}

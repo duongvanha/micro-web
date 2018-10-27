@@ -20,7 +20,7 @@ http {
     }
 
     upstream server {
-        server server:3000;
+        server server:4000;
     }
 
 
@@ -28,7 +28,7 @@ http {
         listen       80;
 
         location / {
-            proxy_pass http://client;
+            proxy_pass http://server;
         }
 
 
@@ -39,10 +39,10 @@ http {
             proxy_set_header Connection "Upgrade";
         }
 
-        location /api {
-            rewrite /api/*(.*) /$1 break;
-            proxy_pass http://server;
-        }
+#        location /api {
+#            rewrite /api/*(.*) /$1 break;
+#            proxy_pass http://server;
+#        }
 
 
     }

@@ -1,80 +1,55 @@
-// const express    = require('express');
-// const bodyParser = require('body-parser');
-// const cors       = require('cors');
-// const redis      = require('redis');
-// const {Pool}     = require('pg');
-//
-//
-// const app = express();
-//
-// const pgClient = new Pool({
-//     user    : process.env.POSTGRES_USER,
-//     host    : process.env.POSTGRES_HOST,
-//     database: process.env.POSTGRES_DB,
-//     password: process.env.POSTGRES_PASSWORD,
-// });
-//
-// pgClient.on('error', () => console.log('Lost PG connection'));
-//
-// pgClient
-//     .query('CREATE TABLE IF NOT EXISTS values (number INT)')
-//     .catch(err => console.log(err));
-//
-// const redisClient    = redis.createClient({
-//     host          : process.env.REDIS_HOST,
-//     retry_strategy: () => 1000,
-// });
-// const redisPublisher = redisClient.duplicate();
-//
-// app.use(cors());
-// app.use(bodyParser.json());
-//
-// app.get('/', function (req, res) {
-//     res.send('hello word');
-// });
-//
-// app.get('/values/all', async (req, res) => {
-//     const values = await pgClient.query('SELECT * from values');
-//
-//     res.send(values.rows);
-// });
-//
-// app.get('/values/current', async (req, res) => {
-//     redisClient.hgetall('values', (err, values) => {
-//         res.send(values);
-//     });
-// });
-//
-// app.post('/values', async (req, res) => {
-//     const index = req.body.index;
-//
-//     if (parseInt(index) > 40) {
-//         return res.status(422).send('Index too high');
-//     }
-//
-//     redisClient.hset('values', index, 'Nothing yet!');
-//     redisPublisher.publish('insert', index);
-//     pgClient.query('INSERT INTO values(number) VALUES($1)', [index]);
-//
-//     res.send({working: true});
-// });
-//
-// app.listen(3000, () => console.log('app listen port 3000'));
+import { GraphQLServer } from 'graphql-yoga';
+import Knex              from 'knex';
+import typeDefs          from './typeDefs.graphql';
 
-const grpc = require('grpc');
-const path = require('path');
-
-const protoPath = path.join(__dirname, '..', 'proto');
-
-const proto = grpc.load({ root: protoPath, file: 'transfers.proto' });
-
-const client = new proto.movie.MovieRepository('localhost:50050', grpc.credentials.createInsecure());
-
-client.GetByPage(4, (error, response) => {
-    if (!error) {
-        console.log('Response : ', response);
-    }
-    else {
-        console.log('Error:', error.message);
-    }
+const knex = Knex({
+    client    : 'pg',
+    connection: {
+        host    : process.env.POSTGRES_HOST,
+        user    : process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+        database: process.env.POSTGRES_DB,
+    },
 });
+
+knex.raw('select 1+1 as result').catch(err => {
+    console.log(err);
+    process.exit(1);
+});
+
+const resolvers = {
+    Query: {
+        categories: () => knex.select().table('categories').limit(10),
+        users     : () => knex.select().table('users').limit(10),
+        countries : () => knex.select().table('countries').limit(10),
+        movies    : () => knex.select().table('movies').limit(1),
+    },
+    Movie: {
+        directors(parent) {
+            return knex.select()
+                .table('users')
+                .leftJoin('movie_director_user', 'users.href', 'movie_director_user.user_href')
+                .where('movie_url', parent.url);
+        },
+        actors(parent) {
+            return knex.select()
+                .table('users')
+                .leftJoin('movie_actor_user', 'users.href', 'movie_actor_user.user_href')
+                .where('movie_url', parent.url);
+        },
+        categories(parent) {
+            return knex.select()
+                .table('categories')
+                .leftJoin('user_categories', 'categories.href', 'user_categories.category_href')
+                .where('movie_url', parent.url);
+        },
+        countries(parent) {
+            return knex.select()
+                .table('countries')
+                .leftJoin('movie_country', 'countries.code', 'movie_country.country_code')
+                .where('movie_url', parent.url);
+        },
+    },
+};
+const server    = new GraphQLServer({ typeDefs, resolvers });
+server.start(() => console.log('Server is running on localhost:4000'));
