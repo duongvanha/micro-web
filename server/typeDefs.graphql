@@ -24,7 +24,7 @@ type Country {
     code    :String
     href    :String
     name    :String
-    movies  :[Movie]
+#    movies  :[Movie]
 }
 
 type Chap {
