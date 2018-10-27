@@ -18,13 +18,13 @@ knex.raw('select 1+1 as result').catch(err => {
 });
 
 const resolvers = {
-    Query: {
+    Query   : {
         categories: () => knex.select().table('categories').limit(10),
         users     : () => knex.select().table('users').limit(10),
         countries : () => knex.select().table('countries').limit(10),
         movies    : () => knex.select().table('movies').limit(1),
     },
-    Movie: {
+    Movie   : {
         directors(parent) {
             return knex.select()
                 .table('users')
@@ -50,6 +50,36 @@ const resolvers = {
                 .where('movie_url', parent.url);
         },
     },
+    Category: {
+        movies(parent) {
+            return knex.select()
+                .table('movies')
+                .leftJoin('user_categories', 'movies.url', 'user_categories.movie_url')
+                .where('category_href', parent.href).limit(10);
+        },
+    },
+    User    : {
+        actorMovies(parent) {
+            return knex.select()
+                .table('movie')
+                .leftJoin('movie_actor_user', 'movie.url', 'movie_actor_user.movie_url')
+                .where('user_href', parent.href);
+        },
+        directorMovies(parent) {
+            return knex.select()
+                .table('movie')
+                .leftJoin('movie_director_user', 'movie.url', 'movie_director_user.movie_url')
+                .where('user_href', parent.href);
+        },
+    },
+    // Country : {
+    //     movies(parent) {
+    //         return knex.select()
+    //             .table('movie')
+    //             .leftJoin('movie_country', 'movie.url', 'movie_country.movie_url')
+    //             .where('country_code', parent.code).limit(10);
+    //     },
+    // },
 };
 const server    = new GraphQLServer({ typeDefs, resolvers });
 server.start(() => console.log('Server is running on localhost:4000'));

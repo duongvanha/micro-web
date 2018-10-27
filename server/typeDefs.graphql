@@ -8,12 +8,15 @@ type Query {
 type Category {
     href    :String
     name    :String
+    movies  :[Movie]
 }
 
 type User {
-    name    :String
-    image   :String
-    href    :String
+    name            :String
+    image           :String
+    href            :String
+    actorMovies     :[Movie]
+    directorMovies  :[Movie]
 }
 
 
@@ -21,6 +24,7 @@ type Country {
     code    :String
     href    :String
     name    :String
+    movies  :[Movie]
 }
 
 type Chap {
