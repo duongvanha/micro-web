@@ -12,7 +12,7 @@ services:
     - ./.env
     image: postgres:alpine
     volumes:
-    - ./configuration/postgres:/usr/src/data
+    - ./configuration/postgres/data:/var/lib/postgresql/data
     ports:
     - 5432:5432
 
