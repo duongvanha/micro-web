@@ -12,11 +12,6 @@ const knex = Knex({
     },
 });
 
-knex.raw('select 1+1 as result').catch(err => {
-    console.log(err);
-    process.exit(1);
-});
-
 const resolvers = {
     Query   : {
         categories: () => knex.select().table('categories').limit(10),
