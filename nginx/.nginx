@@ -1,50 +1,29 @@
-daemon off;
-
-events {
-    worker_connections 1024;
+upstream client {
+    server client:8080;
 }
 
-http {
-
-    # Custom log format that also includes the host that processed the request
-    log_format logstash '$remote_addr - $remote_user [$time_local] "$host" '
-    '"$request" $status $body_bytes_sent '
-    '"$http_referer" "$http_user_agent"';
-
-    # Send logs to Logstash
-    access_log syslog:server=logstash:5140,tag=nginx_access logstash;
-    error_log syslog:server=logstash:5140,tag=nginx_error notice;
-
-    upstream client {
-        server client:8080;
-    }
-
-    upstream server {
-        server server:4000;
-    }
-
-
-    server {
-        listen       80;
-
-        location / {
-            proxy_pass http://server;
-        }
-
-
-        location /sockjs-node {
-            proxy_pass http://client;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "Upgrade";
-        }
-
-#        location /api {
-#            rewrite /api/*(.*) /$1 break;
-#            proxy_pass http://server;
-#        }
-
-
-    }
+upstream server {
+    server server:4000;
 }
 
+
+server {
+    listen       80;
+
+    location / {
+        proxy_pass http://client;
+    }
+
+    location /sockjs-node {
+        proxy_pass http://client;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+    }
+
+    location /api {
+        rewrite /api/*(.*) /$1 break;
+        proxy_pass http://server;
+    }
+
+}

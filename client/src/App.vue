@@ -1,11 +1,12 @@
 <template>
     <div id="app">
         <img alt="Vue logo" src="./assets/logo.png">
-        <HelloWorld v-bind:msg="helloText"/>
+        {{JSON.stringify(users)}}
     </div>
 </template>
 
 <script>
+    import gql               from 'graphql-tag';
     import HelloWorld        from './components/HelloWorld.vue';
     import { axiosProvider } from './services';
 
@@ -15,12 +16,18 @@
             HelloWorld,
         },
         data() {
-            return {helloText: ''}
+            return { users: [],loading: 0, };
         },
-        beforeCreate: function () {
-            axiosProvider.request.get('/api').then(response => this.helloText = response.data)
+        beforeCreate: function() {
+            axiosProvider.request.get('/api').then(response => this.helloText = response.data);
         },
-    }
+        apollo      : {
+            users: {
+                query: gql`{users {name}}`,
+                loadingKey: 'loading',
+            },
+        },
+    };
 </script>
 
 <style>

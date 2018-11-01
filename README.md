@@ -1,4 +1,4 @@
-# app
+# app cinema microservices
 
 ## docker compose for development env
 ```bash
@@ -13,7 +13,7 @@
 ```bash
     protoc -I proto/ proto/*.proto --go_out=plugins=grpc:proto
 ```
-# run kubernetes
+## run kubernetes
 
 ```bash
 #   set pg password
@@ -21,7 +21,7 @@
     kubectl apply -f kubernetes 
 ```
 
-#make data 
+## make data 
 ```bash
 #   psql --username xmvmpwalsagthi --dbname test -f /usr/src/data/db
     dc run postgres --rm -c "psql --username xmvmpwalsagthi --dbname test -f /usr/src/data/db"
