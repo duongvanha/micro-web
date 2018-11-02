@@ -6,8 +6,12 @@ type Query {
     movie       (url: String!)                  :Movie
 }
 
+type Mutation {
+    updateNumberView(url: String!) :Movie
+}
+
 type Category {
-    href    : String
+    href    : String!
     name    : String
     movies  : [Movie]
 }
@@ -21,7 +25,7 @@ type PaginationMovie {
 type User {
     name            : String
     image           : String
-    href            : String
+    href            : String!
     actorMovies     : [Movie]
     directorMovies  : [Movie]
 }
@@ -29,18 +33,18 @@ type User {
 
 type Country {
     code    : String
-    href    : String
+    href    : String!
     name    : String
 #    movies  :[Movie]
 }
 
 type Chap {
-    IdMovie : String
-    Url     : String
+    IdMovie : String!
+    Url     : String!
 }
 
 type Keyword {
-    Text    : String
+    Text    : String!
 }
 
 
@@ -63,7 +67,7 @@ type Movie {
     directors           : [User]
     actors              : [User]
     error               : String
-    url                 : String
+    url                 : String!
 #    keywords            : [Keyword]
 #    Chaps               : [Chap]
     categories          : [Category]

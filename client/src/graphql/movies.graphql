@@ -23,7 +23,7 @@ query movies ($page: Int!, $pageSize: Int!) {
                 #        }
                 #        aw
                 #        im_db
-                #        view
+                view
                 #        status
             }
         }

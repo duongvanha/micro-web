@@ -9,8 +9,7 @@ const knex = Knex({
         user    : process.env.POSTGRES_USER,
         password: process.env.POSTGRES_PASSWORD,
         database: process.env.POSTGRES_DB,
-    },
-    debug     : true,
+    }
 });
 
 const resolvers = {
@@ -69,15 +68,29 @@ const resolvers = {
     User    : {
         actorMovies(parent) {
             return knex.select()
-                .table('movie')
+                .table('movies')
                 .leftJoin('movie_actor_user', 'movie.url', 'movie_actor_user.movie_url')
                 .where('user_href', parent.href);
         },
         directorMovies(parent) {
             return knex.select()
-                .table('movie')
+                .table('movies')
                 .leftJoin('movie_director_user', 'movie.url', 'movie_director_user.movie_url')
                 .where('user_href', parent.href);
+        },
+    },
+    Mutation: {
+        updateNumberView: async (data, condition) => {
+            await knex.select()
+                .table('movies')
+                .where('url', condition.url)
+                .increment('view', 1);
+
+            return knex.select()
+                .table('movies')
+                .where('url', condition.url)
+                .then(collection => collection[0]);
+
         },
     },
     // Country : {

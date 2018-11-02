@@ -3,7 +3,7 @@
 
         <ul>
             <li v-for="movie in movies.collection">
-                <router-link :to="movie.url | urlMovie">{{movie.name_en}} - {{movie.name_vi}}</router-link>
+                <router-link :to="movie.url | urlMovie">{{movie.name_en}} - {{movie.name_vi}} - {{movie.view}}</router-link>
             </li>
         </ul>
         <div class="actions">
