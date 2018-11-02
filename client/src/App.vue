@@ -1,32 +1,16 @@
 <template>
-    <div id="app">
-        <img alt="Vue logo" src="./assets/logo.png">
-        {{JSON.stringify(users)}}
+    <div>
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
-    import gql               from 'graphql-tag';
-    import HelloWorld        from './components/HelloWorld.vue';
-    import { axiosProvider } from './services';
+    // import HelloWorld        from './components/HelloWorld.vue';
+    // import { axiosProvider } from './services';
 
     export default {
-        name        : 'app',
-        components  : {
-            HelloWorld,
-        },
-        data() {
-            return { users: [],loading: 0, };
-        },
-        beforeCreate: function() {
-            axiosProvider.request.get('/api').then(response => this.helloText = response.data);
-        },
-        apollo      : {
-            users: {
-                query: gql`{users {name}}`,
-                loadingKey: 'loading',
-            },
-        },
+        name: 'app',
+
     };
 </script>
 

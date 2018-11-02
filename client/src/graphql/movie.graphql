@@ -1,0 +1,31 @@
+query movie ($url: String!) {
+    movie(url: $url) {
+        ... on Movie {
+            url
+            name_en
+            name_vi
+            #        poster
+            #        duration
+            #        year
+            #        quantity
+            #        resolution
+            #        language
+            #        production_company
+            #        content
+            #        trailer
+            #        categories{
+            #            name
+            #        }
+            #        release_date
+            #        actors {
+            #            image
+            #        }
+            #        aw
+            #        im_db
+            #        view
+            #        status
+        }
+
+    }
+}
+

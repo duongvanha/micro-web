@@ -25,7 +25,7 @@
             },
         },
         beforeCreate: function () {
-            // axiosProvider.request.get('/api/values/current').then(response => this.listPi = response.data)
+            axiosProvider.request.get('/api/values/current').then(response => this.listPi = response.data)
         },
         methods     : {
             send: function () {

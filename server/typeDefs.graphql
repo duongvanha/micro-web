@@ -1,35 +1,42 @@
 type Query {
-    categories  (query: String)      :[Category]
-    users       (query: String)      :[User]
-    countries   (query: String)      :[Country]
-    movies      (query: String)      :[Movie]
+    categories  (page: Int!, pageSize: Int!)    :[Category]
+    users       (page: Int!, pageSize: Int!)    :[User]
+    countries   (page: Int!, pageSize: Int!)    :[Country]
+    movies      (page: Int!, pageSize: Int!)    :PaginationMovie
+    movie       (url: String!)                  :Movie
 }
 
 type Category {
-    href    :String
-    name    :String
-    movies  :[Movie]
+    href    : String
+    name    : String
+    movies  : [Movie]
+}
+
+type PaginationMovie {
+    collection  : [Movie]
+    page        : Int,
+    hasNext     : Boolean
 }
 
 type User {
-    name            :String
-    image           :String
-    href            :String
-    actorMovies     :[Movie]
-    directorMovies  :[Movie]
+    name            : String
+    image           : String
+    href            : String
+    actorMovies     : [Movie]
+    directorMovies  : [Movie]
 }
 
 
 type Country {
-    code    :String
-    href    :String
-    name    :String
+    code    : String
+    href    : String
+    name    : String
 #    movies  :[Movie]
 }
 
 type Chap {
-    IdMovie :String
-    Url     :String
+    IdMovie : String
+    Url     : String
 }
 
 type Keyword {
@@ -38,28 +45,28 @@ type Keyword {
 
 
 type Movie {
-    name_vi             :String
-    name_en             :String
-    duration            :String
-    quantity            :String
-    resolution          :String
-    language            :String
-    production_company  :String
-    content             :String
-    trailer             :String
-    poster              :String
-    status              :String
-    year                :Int
-    view                :Int
-    im_db               :Float
-    aw                  :Float
-    directors           :[User]
-    actors              :[User]
-    error               :String
-    url                 :String
-#    keywords            :[Keyword]
-#    Chaps               :[Chap]
-    categories          :[Category]
-    countries           :[Country]
-    release_date        :String
+    name_vi             : String
+    name_en             : String
+    duration            : String
+    quantity            : String
+    resolution          : String
+    language            : String
+    production_company  : String
+    content             : String
+    trailer             : String
+    poster              : String
+    status              : String
+    year                : Int
+    view                : Int
+    im_db               : Float
+    aw                  : Float
+    directors           : [User]
+    actors              : [User]
+    error               : String
+    url                 : String
+#    keywords            : [Keyword]
+#    Chaps               : [Chap]
+    categories          : [Category]
+    countries           : [Country]
+    release_date        : String
 }

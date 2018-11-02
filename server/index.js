@@ -10,6 +10,7 @@ const knex = Knex({
         password: process.env.POSTGRES_PASSWORD,
         database: process.env.POSTGRES_DB,
     },
+    debug     : true,
 });
 
 const resolvers = {
@@ -17,7 +18,19 @@ const resolvers = {
         categories: () => knex.select().table('categories').limit(10),
         users     : () => knex.select().table('users').limit(10),
         countries : () => knex.select().table('countries').limit(10),
-        movies    : () => knex.select().table('movies').limit(1),
+        movies    : (parent, condition = { page: 1, pageSize: 10 }) => knex.select()
+            .table('movies')
+            .limit(condition.pageSize + 1)
+            .offset(condition.page * condition.pageSize).then(data => {
+                return ({
+                    page      : condition.page,
+                    hasNext   : data.length > condition.pageSize,
+                    collection: data.splice(0, condition.pageSize),
+                });
+            }),
+        movie     : (parent, condition = { url: '' }) => knex.select()
+            .table('movies')
+            .where('url', condition.url).then(collection => collection[0]),
     },
     Movie   : {
         directors(parent) {
