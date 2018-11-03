@@ -1,9 +1,10 @@
 <template>
     <div>
-
         <ul>
             <li v-for="movie in movies.collection">
-                <router-link :to="movie.url | urlMovie">{{movie.name_en}} - {{movie.name_vi}} - {{movie.view}}</router-link>
+                <router-link :to="movie.url | urlMovie">
+                    {{movie.name_en}} - {{movie.name_vi}} - {{movie.view}}
+                </router-link>
             </li>
         </ul>
         <div class="actions">
@@ -31,12 +32,11 @@
         },
         methods: {
             loadMore() {
-                this.page++;
                 // Fetch more data and transform the original result
                 this.$apollo.queries.movies.fetchMore({
                     // New variables
                     variables  : {
-                        page    : this.page,
+                        page    : this.page + 1,
                         pageSize: 10,
                     },
                     // Transform the previous result with new data
