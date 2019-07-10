@@ -1,7 +1,7 @@
 <template>
     <div>
         <ul>
-            <li v-for="movie in movies.collection">
+            <li v-for="(movie, index) in movies.collection" :key="index">
                 <router-link :to="movie.url | urlMovie">
                     {{movie.name_en}} - {{movie.name_vi}} - {{movie.view}}
                 </router-link>
@@ -23,6 +23,7 @@
         },
         filters: {
             urlMovie(url) {
+                // eslint-disable-next-line no-useless-escape
                 const resultsName = new RegExp('http://www\.phimmoi\.net/phim/(.*)/').exec(url);
                 if (!resultsName) {
                     return '#';
