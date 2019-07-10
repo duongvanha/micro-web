@@ -11,7 +11,7 @@
   "author": "dvha <friendd1996@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "graphql-yoga": "^1.16.7",
+    "graphql-yoga": "^1.18.0",
     "knex": "^0.15.2",
     "pg": "^7.6.0"
   },
