@@ -5,10 +5,10 @@ import { InMemoryCache }                         from 'apollo-cache-inmemory';
 
 const cacheInMemory = new InMemoryCache({
     dataIdFromObject: object => object.url || null,
-    cacheRedirects: {
+    cacheRedirects  : {
         Query: {
             movie: (_, args, { getCacheKey }) =>
-                getCacheKey({ __typename: 'Movie', url: args.url })
+                getCacheKey({ __typename: 'Movie', url: args.url }),
         },
     },
 });

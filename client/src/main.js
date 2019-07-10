@@ -14,7 +14,7 @@ new Vue({
     apolloProvider: createProvider(),
     render        : h => h(App),
     router        : new VueRouter({
-        mode: 'history',
+        mode  : 'history',
         routes: [
             { path: '/', component: ListMovie },
             { path: '/movie/:id', component: DetailMovie },

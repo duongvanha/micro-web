@@ -39,7 +39,15 @@
     "rules": {},
     "parserOptions": {
       "parser": "babel-eslint"
-    }
+    },
+    "overrides": [
+      {
+        "files": ["*.graphql"],
+        "rules": {
+          "camelcase": "off"
+        }
+      }
+    ]
   },
   "postcss": {
     "plugins": {
