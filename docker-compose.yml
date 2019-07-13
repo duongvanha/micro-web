@@ -7,6 +7,11 @@ services:
     ports:
     - 4200:80
 
+  consul:
+    image: consul:latest
+    ports:
+      - 8501:8500
+
   postgres:
     env_file:
     - ./.env

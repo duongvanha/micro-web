@@ -1,6 +1,29 @@
 import { GraphQLServer } from 'graphql-yoga';
 import Knex              from 'knex';
 import typeDefs          from './typeDefs.graphql';
+import uuid              from 'uuid';
+import ip                from 'ip';
+import Consul            from 'consul';
+
+const IP   = ip.address();
+const PORT = 4000;
+
+const CONSUL_ID = uuid.v4();
+
+const consul = Consul({ port: 8501, IP: '127.0.0.1' });
+
+let details = {
+    name   : 'data',
+    address: IP,
+    port   : PORT,
+    id     : CONSUL_ID,
+    check  : {
+        ttl                              : '10s',
+        deregister_critical_service_after: '1m',
+    },
+};
+
+console.log(IP);
 
 const knex = Knex({
     client    : 'pg',
@@ -9,7 +32,7 @@ const knex = Knex({
         user    : process.env.POSTGRES_USER,
         password: process.env.POSTGRES_PASSWORD,
         database: process.env.POSTGRES_DB,
-    }
+    },
 });
 
 const resolvers = {
@@ -103,4 +126,9 @@ const resolvers = {
     // },
 };
 const server    = new GraphQLServer({ typeDefs, resolvers });
-server.start(() => console.log('Server is running on localhost:4000'));
+
+(async function() {
+    consul.agent.service.register(details, console.log);
+    await server.start();
+    console.log(`Server is running ip ${IP}:${PORT}`);
+})();
