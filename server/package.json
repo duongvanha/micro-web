@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "./node_modules/.bin/babel-node index.js",
+    "start": "node index.js",
     "dev": "nodemon --exec npm run start"
   },
   "keywords": [],
@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "consul": "^0.34.1",
+    "express": "^4.17.1",
     "graphql-yoga": "^1.18.0",
     "ip": "^1.1.5",
     "knex": "^0.15.2",
