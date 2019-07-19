@@ -33,10 +33,10 @@ const options = {
         deregister_critical_service_after: '1m',
 
         // name         : 'example',
-        ttl: '10s',
+        ttl      : '1s',
         // http         : `${CONSUL_ID}@${IP}:${PORT}/`,
         // tlsskipverify: false,
-        // serviceid    : CONSUL_ID,
+        serviceid: CONSUL_ID,
         // id       : CONSUL_ID + 1,
         // notes        : 'This is an example check.',
     },
@@ -54,24 +54,27 @@ app.get('/check', (req, res) => {
 
 (async function() {
     await consul.agent.service.register(options);
-    // await consul.agent.check.register({
-    //     name     : 'example',
-    //     ttl      : '15s',
-    //     http     : url,
-    //     serviceid: CONSUL_ID,
-    //     id       : CONSUL_ID + 1,
-    //     notes    : 'This is an example check.',
-    // });
+    let i         = 0;
+    const checker = setInterval(() => {
+        console.log(i++);
+    }, 1000);
 
-    // setInterval(() => {
-    //     consul.agent.check.pass({ id: `service:${CONSUL_ID}` }).then(console.log).catch(console.error);
-    //
+
+    // const checker = setInterval(() => {
+    //     consul.agent.check.pass({ id: `service:${CONSUL_ID}` }).then(() => {
+    //         console.log('tick');
+    //     }).catch(console.error);
     // }, 1000);
+    //
+    // console.log(await consul.agent.check.list());
+    //
+    // setTimeout(() => clearInterval(checker), 10000);
 
     const server = app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));
 
     process.on('SIGINT', function() {
         server.close(() => console.log(' Stopping ...'));
+        clearInterval(checker);
         consul.agent.service.deregister(options);
         // consul.agent.check.deregister({
         //     id: CONSUL_ID + 1,
