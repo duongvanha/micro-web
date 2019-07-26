@@ -2,25 +2,39 @@ const express = require('express');
 const uuid    = require('uuid');
 const ip      = require('ip');
 const Consul  = require('consul');
+const os      = require('os');
+
+
+console.log();
 
 
 const app       = express();
 const IP        = ip.address();
 const PORT      = 4000;
 const CONSUL_ID = uuid.v4();
+const hostName  = os.hostname();
 
-const consul = Consul({ port: 8501, IP: '127.0.0.1', promisify: true });
+const consul = Consul({ port: 8500, host: 'consul', promisify: true });
 
-const url = `http://${IP}:${PORT}/check`;
+const url = `http://${hostName}:${PORT}/check`;
 
 console.log(CONSUL_ID);
 console.log(url);
+
 const options = {
     name   : 'data',
     address: IP,
     port   : PORT,
     id     : CONSUL_ID,
     check  : {
+        // 'id'                             : 'api',
+        'name'                           : 'HTTP API on port 5000',
+        // 'http'                           : url,
+        // 'tls_skip_verify'                : false,
+        // 'method'                         : 'POST',
+        // 'header'                         : { 'x-foo': ['bar', 'baz'] },
+        // 'interval'                       : '10s',
+        // 'timeout'                        : '1s'
         // note                             : 'HTTP API on port 4000',
         // 'http'  s                         : 'https://localhost:5000/health',
         // 'tls_skip_verify'                : false,
@@ -30,15 +44,15 @@ const options = {
         // 'timeout'                        : '1s',
         // http                             : url,
         // ttl                              : '10s',
-        deregister_critical_service_after: '1m',
+        deregister_critical_service_after: '1s',
 
         // name         : 'example',
-        ttl      : '1s',
-        // http         : `${CONSUL_ID}@${IP}:${PORT}/`,
+        interval: '10s',
+        http    : url,
         // tlsskipverify: false,
-        serviceid: CONSUL_ID,
-        // id       : CONSUL_ID + 1,
-        // notes        : 'This is an example check.',
+        // serviceid: CONSUL_ID,
+        // id      : `${CONSUL_ID}:1`,
+        notes   : 'Check service alive',
     },
 };
 
@@ -54,33 +68,11 @@ app.get('/check', (req, res) => {
 
 (async function() {
     await consul.agent.service.register(options);
-    let i         = 0;
-    const checker = setInterval(() => {
-        console.log(i++);
-    }, 1000);
-
-
-    // const checker = setInterval(() => {
-    //     consul.agent.check.pass({ id: `service:${CONSUL_ID}` }).then(() => {
-    //         console.log('tick');
-    //     }).catch(console.error);
-    // }, 1000);
-    //
-    // console.log(await consul.agent.check.list());
-    //
-    // setTimeout(() => clearInterval(checker), 10000);
-
     const server = app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));
 
     process.on('SIGINT', function() {
-        server.close(() => console.log(' Stopping ...'));
-        clearInterval(checker);
         consul.agent.service.deregister(options);
-        // consul.agent.check.deregister({
-        //     id: CONSUL_ID + 1,
-        // }, function(err) {
-        //     if (err) throw err;
-        // });
+        server.close(() => console.log(' Stopping ...'));
     });
 
 })();
