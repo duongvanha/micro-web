@@ -5,42 +5,47 @@ services:
     restart: always
     build: nginx
     ports:
-    - 4200:80
+      - 4200:80
 
   postgres:
     env_file:
-    - ./.env
+      - ./.env
     image: postgres:alpine
     volumes:
-    - ./configuration/postgres:/usr/src/data
+      - ./configuration/postgres:/usr/src/data
     ports:
-    - 5432:5432
+      - 5432:5432
 
-#  redis:
-#    env_file:
-#    - ./.env
-#    image: redis:alpine
-#
+  consul:
+    image: consul:latest
+    ports:
+      - 8501:8500
+
+  #  redis:
+  #    env_file:
+  #    - ./.env
+  #    image: redis:alpine
+  #
   client:
     build:
       context: client
       dockerfile: docker/Dockerfile.${NODE_ENV}
     volumes:
-    - ./client:/usr/src/app
-    - ./client/node_modules:/usr/src/app/node_modules
-    - ./client/docker/command.${NODE_ENV}.sh:/command.sh
+      - ./client:/usr/src/app
+      - ./client/node_modules:/usr/src/app/node_modules
+      - ./client/docker/command.${NODE_ENV}.sh:/command.sh
 
   server:
     env_file:
-    - ./.env
+      - ./.env
     build:
       context: server
       dockerfile: Dockerfile.${NODE_ENV}
     volumes:
-    - ./server:/app
-    - /app/node_modules
+      - ./server:/app
+      - /app/node_modules
     links:
-    - postgres
+      - postgres
 #    - redis
 
 #  worker:

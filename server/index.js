@@ -1,6 +1,35 @@
 import { GraphQLServer } from 'graphql-yoga';
 import Knex              from 'knex';
 import typeDefs          from './typeDefs.graphql';
+import uuid              from 'uuid';
+import ip                from 'ip';
+import Consul            from 'consul';
+import os                from 'os';
+
+const IP        = ip.address();
+const PORT      = 4000;
+const CONSUL_ID = uuid.v4();
+const hostName  = os.hostname();
+
+const consul = Consul({ port: 8500, host: 'consul', promisify: true });
+
+const url = `http://${hostName}:${PORT}/check`;
+
+const options = {
+    name   : 'api service',
+    address: IP,
+    port   : PORT,
+    id     : CONSUL_ID,
+};
+
+const optionsChecker = {
+    id                               : CONSUL_ID,
+    name                             : 'HTTP API on port 5000',
+    deregister_critical_service_after: '1s',
+    interval                         : '10s',
+    http                             : url,
+    notes                            : 'Check service alive',
+};
 
 const knex = Knex({
     client    : 'pg',
@@ -9,7 +38,7 @@ const knex = Knex({
         user    : process.env.POSTGRES_USER,
         password: process.env.POSTGRES_PASSWORD,
         database: process.env.POSTGRES_DB,
-    }
+    },
 });
 
 const resolvers = {
@@ -102,5 +131,24 @@ const resolvers = {
     //     },
     // },
 };
-const server    = new GraphQLServer({ typeDefs, resolvers });
-server.start(() => console.log('Server is running on localhost:4000'));
+
+const server = new GraphQLServer({ typeDefs, resolvers });
+
+server.express.get('/check', (req, res) => {
+    console.log('tick');
+    res.send(`I'm ok`);
+});
+
+(async function() {
+    await consul.agent.service.register(options);
+    await consul.agent.check.register(optionsChecker);
+    await server.start();
+    console.log('Server is running on localhost:4000');
+
+    process.on('SIGINT', function() {
+        consul.agent.service.deregister(options);
+        consul.agent.check.deregister(optionsChecker);
+        server.express.close(() => console.log(' Stopping ...'));
+    });
+
+})();
